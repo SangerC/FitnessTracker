@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
 	import { getDayEntries, type DayExerciseGroup } from '$lib/queries';
 	import { formatDayLabel } from '$lib/date';
+	import { base } from '$app/paths';
 
 	const dateKey = $derived(page.params.date ?? '');
 	let groups = $state<DayExerciseGroup[]>([]);
@@ -18,7 +19,7 @@
 </script>
 
 <div class="page">
-	<a class="back muted" href="/">← Back</a>
+	<a class="back muted" href="{base}/">← Back</a>
 	<h1>{formatDayLabel(dateKey)}</h1>
 
 	{#if loading}

@@ -3,6 +3,7 @@
 	import { getExercise, getExerciseHistory, getCardioHistory, type StrengthSession } from '$lib/queries';
 	import type { CardioEntry, Exercise } from '$lib/types';
 	import { dayKey, formatDayLabel, formatRelativeDay } from '$lib/date';
+	import { base } from '$app/paths';
 
 	let { id }: { id: number } = $props();
 
@@ -24,7 +25,7 @@
 </script>
 
 <div class="page">
-	<a class="back muted" href="/log">← Back</a>
+	<a class="back muted" href="{base}/log">← Back</a>
 
 	{#if loading}
 		<p class="muted">Loading…</p>
@@ -34,7 +35,7 @@
 		<h1>{exercise.name}</h1>
 		<p class="muted">{exercise.category}</p>
 
-		<a class="btn primary full log-link" href={`/log/${id}`}>Log {exercise.name}</a>
+		<a class="btn primary full log-link" href={`${base}/log/${id}`}>Log {exercise.name}</a>
 
 		<div class="section-title">History</div>
 		{#if exercise.type === 'strength'}

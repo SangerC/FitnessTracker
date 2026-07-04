@@ -3,6 +3,7 @@
 	import { liveQueryStore } from '$lib/live';
 	import { listCategories, addExercise } from '$lib/queries';
 	import type { ExerciseType } from '$lib/types';
+	import { base } from '$app/paths';
 
 	const categories = liveQueryStore(() => listCategories(), []);
 
@@ -14,12 +15,12 @@
 		e.preventDefault();
 		if (!name.trim() || !category.trim()) return;
 		const id = await addExercise({ name: name.trim(), category: category.trim(), type });
-		goto(`/log/${id}`);
+		goto(`${base}/log/${id}`);
 	}
 </script>
 
 <div class="page">
-	<a class="back muted" href="/log">← Back</a>
+	<a class="back muted" href="{base}/log">← Back</a>
 	<h1>New exercise</h1>
 
 	<form onsubmit={handleSubmit}>

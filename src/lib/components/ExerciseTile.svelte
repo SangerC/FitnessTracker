@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { Exercise } from '$lib/types';
 	import { formatRelativeDay } from '$lib/date';
+	import { base } from '$app/paths';
 
 	let { exercise, lastUsed }: { exercise: Exercise; lastUsed?: number } = $props();
 </script>
 
-<a class="tile" href={`/log/${exercise.id}`}>
+<a class="tile" href={`${base}/log/${exercise.id}`}>
 	<span class="name">{exercise.name}</span>
 	<span class="meta muted">
 		{exercise.category}{lastUsed ? ` · ${formatRelativeDay(lastUsed)}` : ''}

@@ -17,6 +17,7 @@
 	import NumberStepper from '$lib/components/NumberStepper.svelte';
 	import SetRow from '$lib/components/SetRow.svelte';
 	import { formatRelativeDay } from '$lib/date';
+	import { base } from '$app/paths';
 
 	let { id }: { id: number } = $props();
 
@@ -62,7 +63,7 @@
 </script>
 
 <div class="page">
-	<a class="back muted" href="/log">← Back</a>
+	<a class="back muted" href="{base}/log">← Back</a>
 
 	{#if loading}
 		<p class="muted">Loading…</p>
@@ -71,7 +72,7 @@
 	{:else}
 		<h1>{exercise.name}</h1>
 		<p class="muted category">
-			{exercise.category} · <a class="muted" href={`/history/${id}`}>full history</a>
+			{exercise.category} · <a class="muted" href={`${base}/history/${id}`}>full history</a>
 		</p>
 
 		{#if exercise.type === 'strength'}
@@ -134,7 +135,7 @@
 			{/if}
 		{/if}
 
-		<a class="btn full done" href="/">Done</a>
+		<a class="btn full done" href="{base}/">Done</a>
 	{/if}
 </div>
 

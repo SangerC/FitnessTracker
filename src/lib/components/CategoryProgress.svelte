@@ -1,10 +1,13 @@
 <script lang="ts">
 	import type { CategorySummary } from '$lib/queries';
 	import { dayKey, formatRelativeDay } from '$lib/date';
+	import { base } from '$app/paths';
 
 	let { summary }: { summary: CategorySummary } = $props();
 
-	const href = $derived(summary.lastTimestamp ? `/day/${dayKey(summary.lastTimestamp)}` : null);
+	const href = $derived(
+		summary.lastTimestamp ? `${base}/day/${dayKey(summary.lastTimestamp)}` : null
+	);
 </script>
 
 <a href={href} class="card" class:disabled={!href}>

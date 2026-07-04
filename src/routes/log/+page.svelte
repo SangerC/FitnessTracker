@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { liveQueryStore } from '$lib/live';
 	import { listExercisesByCategory } from '$lib/queries';
+	import { base } from '$app/paths';
 
 	const groups = liveQueryStore(() => listExercisesByCategory(), []);
 	let search = $state('');
@@ -34,12 +35,12 @@
 		<div class="section-title">{group.category}</div>
 		<div class="card list">
 			{#each group.exercises as exercise (exercise.id)}
-				<a class="row" href={`/log/${exercise.id}`}>{exercise.name}</a>
+				<a class="row" href={`${base}/log/${exercise.id}`}>{exercise.name}</a>
 			{/each}
 		</div>
 	{/each}
 
-	<a class="btn full new" href="/exercises/new">+ New exercise</a>
+	<a class="btn full new" href="{base}/exercises/new">+ New exercise</a>
 </div>
 
 <style>

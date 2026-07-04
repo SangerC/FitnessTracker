@@ -8,6 +8,7 @@
 		listExercises,
 		archiveExercise
 	} from '$lib/queries';
+	import { base } from '$app/paths';
 
 	const categories = liveQueryStore(() => listCategories(), []);
 	const goals = liveQueryStore(() => listGoals(), []);
@@ -64,7 +65,7 @@
 		{/each}
 	</div>
 
-	<a class="btn full new" href="/exercises/new">+ New exercise</a>
+	<a class="btn full new" href="{base}/exercises/new">+ New exercise</a>
 </div>
 
 <style>

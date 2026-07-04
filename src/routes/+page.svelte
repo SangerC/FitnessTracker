@@ -3,6 +3,7 @@
 	import { getCategorySummaries, getRecentExercises, listExercises } from '$lib/queries';
 	import CategoryProgress from '$lib/components/CategoryProgress.svelte';
 	import ExerciseTile from '$lib/components/ExerciseTile.svelte';
+	import { base } from '$app/paths';
 
 	const summaries = liveQueryStore(() => getCategorySummaries(), []);
 	const recent = liveQueryStore(() => getRecentExercises(6), []);
@@ -15,7 +16,7 @@
 	{#if $exerciseCount === 0}
 		<div class="card empty">
 			<p>No exercises yet.</p>
-			<a class="btn primary full" href="/exercises/new">+ Add your first exercise</a>
+			<a class="btn primary full" href="{base}/exercises/new">+ Add your first exercise</a>
 		</div>
 	{:else if $exerciseCount > 0}
 		{#if $summaries.length}
@@ -34,7 +35,7 @@
 			</div>
 		{/if}
 
-		<a class="btn full more" href="/log">+ Log an exercise</a>
+		<a class="btn full more" href="{base}/log">+ Log an exercise</a>
 	{/if}
 </div>
 

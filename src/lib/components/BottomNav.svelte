@@ -1,21 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
 
 	const items = [
-		{ href: '/', label: 'Home', icon: '⌂' },
-		{ href: '/log', label: 'Log', icon: '+' },
-		{ href: '/settings', label: 'Settings', icon: '⚙' }
+		{ route: '/', label: 'Home', icon: '⌂' },
+		{ route: '/log', label: 'Log', icon: '+' },
+		{ route: '/settings', label: 'Settings', icon: '⚙' }
 	];
 
-	function isActive(href: string) {
-		if (href === '/') return page.url.pathname === '/';
-		return page.url.pathname.startsWith(href);
+	function isActive(route: string) {
+		const path = page.url.pathname.slice(base.length) || '/';
+		if (route === '/') return path === '/';
+		return path.startsWith(route);
 	}
 </script>
 
 <nav>
-	{#each items as item (item.href)}
-		<a href={item.href} class:active={isActive(item.href)}>
+	{#each items as item (item.route)}
+		<a href={`${base}${item.route}`} class:active={isActive(item.route)}>
 			<span class="icon">{item.icon}</span>
 			<span class="label">{item.label}</span>
 		</a>
