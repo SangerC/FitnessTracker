@@ -1,9 +1,13 @@
 export type ExerciseType = 'strength' | 'cardio';
 
+export const CATEGORIES = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Cardio'] as const;
+
+export type Category = (typeof CATEGORIES)[number];
+
 export interface Exercise {
 	id?: number;
 	name: string;
-	category: string;
+	category: Category;
 	type: ExerciseType;
 	archived?: boolean;
 }
@@ -26,16 +30,6 @@ export interface CardioEntry {
 
 export interface Goal {
 	id?: number;
-	category: string;
+	category: Category;
 	targetPerWeek: number;
 }
-
-export const DEFAULT_CATEGORIES = [
-	'Chest',
-	'Back',
-	'Legs',
-	'Shoulders',
-	'Arms',
-	'Core',
-	'Cardio'
-];

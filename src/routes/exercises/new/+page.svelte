@@ -1,20 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { liveQueryStore } from '$lib/live';
-	import { listCategories, addExercise } from '$lib/queries';
-	import type { ExerciseType } from '$lib/types';
+	import { addExercise } from '$lib/queries';
+	import { CATEGORIES, type Category, type ExerciseType } from '$lib/types';
 	import { base } from '$app/paths';
 
-	const categories = liveQueryStore(() => listCategories(), []);
-
 	let name = $state('');
-	let category = $state('');
+	let category = $state<Category | ''>('');
 	let type = $state<ExerciseType>('strength');
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		if (!name.trim() || !category.trim()) return;
-		const id = await addExercise({ name: name.trim(), category: category.trim(), type });
+		if (!name.trim() || !category) return;
+		const id = await addExercise({ name: name.trim(), category, type });
 		goto(`${base}/log/${id}`);
 	}
 </script>
@@ -31,16 +28,10 @@
 
 		<div class="field">
 			<label for="category">Category</label>
-			<input
-				id="category"
-				list="categories"
-				bind:value={category}
-				placeholder="e.g. Chest"
-				required
-			/>
-			<datalist id="categories">
-				{#each $categories as c (c)}<option value={c}></option>{/each}
-			</datalist>
+			<select id="category" bind:value={category} required>
+				<option value="" disabled>Select a category</option>
+				{#each CATEGORIES as c (c)}<option value={c}>{c}</option>{/each}
+			</select>
 		</div>
 
 		<div class="field">

@@ -1,24 +1,17 @@
 <script lang="ts">
 	import { liveQueryStore } from '$lib/live';
-	import {
-		listCategories,
-		listGoals,
-		setGoal,
-		deleteGoal,
-		listExercises,
-		archiveExercise
-	} from '$lib/queries';
+	import { listGoals, setGoal, deleteGoal, listExercises, archiveExercise } from '$lib/queries';
+	import { CATEGORIES, type Category } from '$lib/types';
 	import { base } from '$app/paths';
 
-	const categories = liveQueryStore(() => listCategories(), []);
 	const goals = liveQueryStore(() => listGoals(), []);
 	const exercises = liveQueryStore(() => listExercises(), []);
 
-	function goalFor(category: string) {
+	function goalFor(category: Category) {
 		return $goals.find((g) => g.category === category)?.targetPerWeek ?? 0;
 	}
 
-	async function updateGoal(category: string, value: number) {
+	async function updateGoal(category: Category, value: number) {
 		if (value <= 0) {
 			const g = $goals.find((g) => g.category === category);
 			if (g?.id) await deleteGoal(g.id);
@@ -33,7 +26,7 @@
 
 	<div class="section-title">Weekly goals</div>
 	<div class="card">
-		{#each $categories as category (category)}
+		{#each CATEGORIES as category (category)}
 			<div class="row">
 				<span>{category}</span>
 				<input
@@ -53,14 +46,17 @@
 			<p class="muted">No exercises yet.</p>
 		{/if}
 		{#each $exercises as exercise (exercise.id)}
-			<div class="row">
+			<div class="row exercise-row">
 				<div>
 					<div class="name">{exercise.name}</div>
 					<div class="muted small">{exercise.category} · {exercise.type}</div>
 				</div>
-				<button type="button" class="btn danger" onclick={() => archiveExercise(exercise.id!)}>
-					Archive
-				</button>
+				<div class="actions">
+					<a class="btn" href="{base}/exercises/{exercise.id}/edit">Edit</a>
+					<button type="button" class="btn danger" onclick={() => archiveExercise(exercise.id!)}>
+						Archive
+					</button>
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -90,6 +86,21 @@
 
 	.small {
 		font-size: 0.78rem;
+	}
+
+	.exercise-row {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	.actions {
+		display: flex;
+		gap: 8px;
+	}
+
+	.actions .btn {
+		flex: 1;
 	}
 
 	.new {

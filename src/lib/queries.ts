@@ -1,6 +1,6 @@
 import { db } from './db';
 import { dayKey, startOfWeek, todayKey } from './date';
-import { DEFAULT_CATEGORIES, type CardioEntry, type Exercise, type Goal, type SetEntry } from './types';
+import type { CardioEntry, Category, Exercise, Goal, SetEntry } from './types';
 
 // ---- Exercises ----
 
@@ -12,13 +12,13 @@ export async function listExercises(includeArchived = false): Promise<Exercise[]
 }
 
 export interface CategoryGroup {
-	category: string;
+	category: Category;
 	exercises: Exercise[];
 }
 
 export async function listExercisesByCategory(): Promise<CategoryGroup[]> {
 	const exercises = await listExercises();
-	const map = new Map<string, Exercise[]>();
+	const map = new Map<Category, Exercise[]>();
 	for (const e of exercises) {
 		if (!map.has(e.category)) map.set(e.category, []);
 		map.get(e.category)!.push(e);
@@ -36,18 +36,15 @@ export async function addExercise(exercise: Omit<Exercise, 'id'>): Promise<numbe
 	return db.exercises.add(exercise);
 }
 
-export async function archiveExercise(id: number, archived = true): Promise<void> {
-	await db.exercises.update(id, { archived });
+export async function updateExercise(
+	id: number,
+	updates: Pick<Exercise, 'name' | 'category' | 'type'>
+): Promise<void> {
+	await db.exercises.update(id, updates);
 }
 
-export async function listCategories(): Promise<string[]> {
-	const [exercises, goals] = await Promise.all([db.exercises.toArray(), db.goals.toArray()]);
-	const set = new Set<string>([
-		...DEFAULT_CATEGORIES,
-		...exercises.map((e) => e.category),
-		...goals.map((g) => g.category)
-	]);
-	return Array.from(set).sort();
+export async function archiveExercise(id: number, archived = true): Promise<void> {
+	await db.exercises.update(id, { archived });
 }
 
 /** Exercises used most recently (across sets or cardio), for one-tap quick-log tiles. */
@@ -159,7 +156,7 @@ export async function getCardioHistory(exerciseId: number, limit = 15): Promise<
 // ---- Category summaries (weekly goal progress + "last done") ----
 
 export interface CategorySummary {
-	category: string;
+	category: Category;
 	lastTimestamp: number | null;
 	daysThisWeek: number;
 	targetPerWeek: number | null;
@@ -178,9 +175,9 @@ export async function getCategorySummaries(): Promise<CategorySummary[]> {
 	const goalMap = new Map(goals.map((g) => [g.category, g.targetPerWeek]));
 	const weekStart = startOfWeek();
 
-	const categories = new Set<string>([...exerciseCategory.values(), ...goalMap.keys()]);
-	const daysByCategory = new Map<string, Set<string>>();
-	const lastByCategory = new Map<string, number>();
+	const categories = new Set<Category>([...exerciseCategory.values(), ...goalMap.keys()]);
+	const daysByCategory = new Map<Category, Set<string>>();
+	const lastByCategory = new Map<Category, number>();
 
 	const record = (exerciseId: number, timestamp: number) => {
 		const category = exerciseCategory.get(exerciseId);
@@ -210,7 +207,7 @@ export async function listGoals(): Promise<Goal[]> {
 	return db.goals.toArray();
 }
 
-export async function setGoal(category: string, targetPerWeek: number): Promise<void> {
+export async function setGoal(category: Category, targetPerWeek: number): Promise<void> {
 	const existing = await db.goals.where('category').equals(category).first();
 	if (existing) {
 		await db.goals.update(existing.id!, { targetPerWeek });
