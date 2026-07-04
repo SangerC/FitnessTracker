@@ -3,7 +3,8 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-const base = process.env.NODE_ENV === 'production' ? '/fitnesstracker' : '';
+// Must match the repo name's exact casing: GitHub Pages project site URLs are case-sensitive.
+const base = process.env.NODE_ENV === 'production' ? '/FitnessTracker' : '';
 
 export default defineConfig({
 	plugins: [
